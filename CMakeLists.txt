@@ -9,17 +9,17 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Quick Svg Sensors)
 
 qt_standard_project_setup(REQUIRES 6.6)
 
-qt_add_executable(contactlistexample WIN32 MACOSX_BUNDLE
+qt_add_executable(templateapp WIN32 MACOSX_BUNDLE
     contactmodel.cpp contactmodel.h
     main.cpp
 )
 
 if(ANDROID)
-    set_property(TARGET contactlistexample PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+    set_property(TARGET templateapp PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
         ${CMAKE_CURRENT_SOURCE_DIR}/android)
 endif()
 
-qt_add_qml_module(contactlistexample
+qt_add_qml_module(templateapp
     URI contactlist
     QML_FILES
         "ContactDelegate.ui.qml"
@@ -29,9 +29,13 @@ qt_add_qml_module(contactlistexample
         "SectionDelegate.ui.qml"
         "ContactList.qml"
         "designer/Backend/ContactModel.qml"
+    RESOURCES
+        "images/menu_bars.svg"
+        "images/menu.svg"
+        "images/back.svg"
 )
 
-target_link_libraries(contactlistexample PUBLIC
+target_link_libraries(templateapp PUBLIC
     Qt6::Core
     Qt6::Gui
     Qt6::Quick
@@ -39,14 +43,14 @@ target_link_libraries(contactlistexample PUBLIC
     Qt6::Sensors
 )
 
-install(TARGETS contactlistexample
+install(TARGETS templateapp
     BUNDLE  DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
 qt_generate_deploy_qml_app_script(
-    TARGET contactlistexample
+    TARGET templateapp
     OUTPUT_SCRIPT deploy_script
     MACOS_BUNDLE_POST_BUILD
     NO_UNSUPPORTED_PLATFORM_ERROR
