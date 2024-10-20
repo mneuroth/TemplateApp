@@ -55,7 +55,7 @@ jobs:
         dir build
         cmake -S . -B ./build
         dir
-        cmake --build ./build --target all
+        cmake --build ./build --target all_build
         dir build
         cd .\build
         dir
