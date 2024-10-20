@@ -1,4 +1,4 @@
-name: Linux CI
+name: Windows CI
 
 on:
   push:
@@ -6,14 +6,15 @@ on:
   pull_request:
     branches: [ main ]
 
-jobs:  
+jobs:
 
-  linux_build_6_7_3:
+  windows_6_7_3_msc_build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
+    - uses: ilammy/msvc-dev-cmd@v1
     - uses: jurplel/install-qt-action@v4
       with:
         # Directory to install Qt
@@ -25,11 +26,11 @@ jobs:
         # Target platform for build
         target: 'desktop'
         # Architecture for Windows/Android
-        arch: # optional
+        arch: 'win64_msvc2019_64'
         # Whether or not to install Qt dependencies on Linux
         install-deps: 'true'
         # Additional Qt modules to install
-        modules: qtsensors # 'qtscript qtscripttools' # qtcharts, qtdatavis3d, qtpurchasing, qtvirtualkeyboard, qtwebengine, qtnetworkauth, qtwebglplugin, qtscript, debug_info
+        modules: qtsensors #'qtscript qtscripttools'
         # Force a Qt mirror in case the default is not working
         #mirror: # optional
         # Whether or not to actually download Qt
@@ -40,13 +41,21 @@ jobs:
         py7zrversion: # optional, default is ==0.6
         # Any extra arguments to append to the back
         extra: # optional
+        tools: 'tools_ifw'
+        #tools: 'tools_ifw,4.7.0-0-202402231255,qt.tools.ifw.47'
+    - name: Install 7Zip PowerShell Module
+      shell: powershell
+      run: Install-Module 7Zip4PowerShell -Force -Verbose
     - name: Install Qt and compile
       run: |
+        d:
+        dir 
         mkdir build
-        ls -lrt
-        cmake -S . -B ./build
-        ls -lrt
-        cd ./build
-        ls -lrt
+        dir
+        cmake -S . -B .\build
+        dir
+        cd .\build
+        dir
         make
-        ls -lrt
+        dir
+        

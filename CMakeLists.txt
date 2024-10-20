@@ -33,6 +33,8 @@ qt_add_qml_module(templateapp
         "SettingsDialog.qml"
         "SettingsDialogForm.ui.qml"
         "HomeForm.ui.qml"
+        "Page1Form.ui.qml"
+        "Page2Form.ui.qml"
         "MobileFileDialog.qml"
         "MobileFileDialogForm.ui.qml"
         "designer/Backend/ContactModel.qml"
