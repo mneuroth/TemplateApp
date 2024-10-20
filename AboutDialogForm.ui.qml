@@ -75,7 +75,7 @@ Page {
 
             Text {
                 id: lblGithubPage
-                text: qsTr("<a href='https://github.com/mneuroth/PicoTemplateApp'>Github page for PicoTemplateApp</a>")
+                text: qsTr("<a href='https://github.com/mneuroth/TemplateApp'>Github page for TemplateApp</a>")
                 Layout.alignment: Qt.AlignCenter
             }
 
