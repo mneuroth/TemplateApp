@@ -578,7 +578,7 @@ ApplicationWindow {
         property int supportLevel: -1   // no support level at all
 
         property bool useToolBar: true
-        property bool mobileUI: false // applicationData.isMobileUI
+        property bool mobileUI: applicationData.isMobileUI
     }
 
     Connections {
@@ -645,6 +645,25 @@ ApplicationWindow {
         }
         function onRestoreDefaultSettings() {
             // TODO: restore default settings
+        }
+    }
+
+    Connections {
+        target: applicationData
+
+        // used for WASM platform:
+        function onReceiveOpenFileContent(fileName, fileContent) {
+            setFileName(fileName, null)
+            homePage.txtEditor.text = fileContent
+        }
+        /*
+        function receiveOpenFileContent(fileName, fileContent) {
+            setFileName(fileName, null)
+            homePage.txtEditor.text = fileContent
+        }
+        */
+        function onSendErrorText(msg) {
+            homePage.txtEditor.text += "\n" + msg
         }
     }
 

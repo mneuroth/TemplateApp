@@ -3,6 +3,9 @@
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+
+#include "applicationdata.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,6 +14,10 @@ int main(int argc, char *argv[])
     QGuiApplication::setApplicationName("Contact List");
 
     QQmlApplicationEngine engine;
+
+    ApplicationData data(0, 0, 0, engine);
+    engine.rootContext()->setContextProperty("applicationData", &data);
+
     engine.loadFromModule("contactlist", "ContactList");
     if (engine.rootObjects().isEmpty())
         return -1;
