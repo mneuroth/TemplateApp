@@ -101,7 +101,7 @@ ApplicationWindow {
         {
             applicationData.getOpenFileContentAsync("*.txt")
         }
-        else if( !settings.mobileUI )
+        else */if( !settings.mobileUI )
         {
             fileDialog.openMode = true
             fileDialog.folder = "."
@@ -109,7 +109,7 @@ ApplicationWindow {
             fileDialog.open()
         }
         else
-*/
+
         {
             stackView.pop()
             mobileFileDialog.pathsSDCard = applicationData.getSDCardPaths() // or: ["c:\\tmp","c:\\"]
@@ -519,7 +519,7 @@ ApplicationWindow {
 
         visible: false
     }
-/*
+
     DialogLabs.FileDialog {
         id: fileDialog
         objectName: "fileDialog"
@@ -537,7 +537,7 @@ ApplicationWindow {
         //selectMultiple: false
         //selectFolder: false
     }
-
+/*
     SupportDialog {
         id: supportDialog
         visible: false
@@ -582,6 +582,25 @@ ApplicationWindow {
     }
 
     Connections {
+        target: fileDialog
+
+        function onAccepted() {
+            if( fileDialog.openMode ) {
+                processOpenFileCallback(fileDialog.file/*Url*/)
+            }
+            else {
+                processSaveFileCallback(fileDialog.file/*Url*/)
+            }
+            fileDialog.close()
+            focusToEditor()
+        }
+        function onRejected() {
+            fileDialog.close()
+            focusToEditor()
+        }
+    }
+
+    Connections {
         target: mobileFileDialog
 
         //onRejected: stackView.pop()       // for Qt 5.12.xx
@@ -612,13 +631,24 @@ ApplicationWindow {
         function onStorageOpenFile() {
             //console.log("storage open")
             //addToOutput("storage open")
-            storageAccess.openFile()
+            //old: storageAccess.openFile()
+            fileDialog.openMode = true
+            fileDialog.folder = "."
+            fileDialog.nameFilters = ["*"]
+            fileDialog.fileMode = DialogLabs.FileDialog.OpenFile
+            fileDialog.open()
         }
         function onStorageCreateFile(fileNane) {
             //console.log("storage create file "+fileNane)
             //addToOutput("storage create file "+fileNane)
             setFileName(fileName, null)
-            storageAccess.createFile(fileNane)
+            //old: storageAccess.createFile(fileNane)
+            fileDialog.openMode = false
+            fileDialog.folder = "."
+            fileDialog.nameFilters = ["*"]
+            fileDialog.fileMode = DialogLabs.FileDialog.SaveFile
+            fileDialog.file = fileName
+            fileDialog.open()
         }
     }
 

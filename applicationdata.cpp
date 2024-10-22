@@ -5,9 +5,9 @@
 #ifdef _WITH_SHARING
 #include "shareutils.hpp"
 #endif
-#ifdef _WITH_STORAGE_ACCESS
-#include "storageaccess.h"
-#endif
+//#ifdef _WITH_STORAGE_ACCESS
+//#include "storageaccess.h"
+//#endif
 
 #if defined(Q_OS_ANDROID)
 //#include "android/androidshareutils.hpp"
@@ -83,9 +83,9 @@ bool GrantAccessToSDCardPath(/*QObject * parent*/)
 }
 
 
-ApplicationData::ApplicationData(QObject *parent, ShareUtils * pShareUtils, StorageAccess * pStorageAccess, QQmlApplicationEngine & aEngine)
+ApplicationData::ApplicationData(QObject *parent, ShareUtils * pShareUtils/*, StorageAccess * pStorageAccess*/, QQmlApplicationEngine & aEngine)
     : QObject(parent),
-      m_pStorageAccess(pStorageAccess),
+      //m_pStorageAccess(pStorageAccess),
       m_pShareUtils(0),
       m_aEngine(aEngine),
       m_bUseLocalFileDialog(false),
@@ -218,37 +218,44 @@ QString ApplicationData::getNormalizedPath(const QString & path) const
     return aInfo.canonicalPath();
 }
 
-bool IsAndroidStorageFileUrl(const QString & url)
-{
-    return url.startsWith("content:/");
-}
+// bool IsAndroidStorageFileUrl(const QString & url)
+// {
+//     return url.startsWith("content:/");
+// }
 
-QString GetTranslatedFileName(const QString & fileName)
-{
-    QString translatedFileName = fileName;
-    if( IsAndroidStorageFileUrl(fileName) )
-    {
-        // handle android storage urls --> forward content://... to QFile directly
-        translatedFileName = fileName;
-    }
-    else
-    {
-        if(!fileName.startsWith(":"))       // files with : should be resolved in the resources ...
-        {
-            QUrl url(fileName);
-            if(url.isValid() && url.isLocalFile())
-            {
-                translatedFileName = url.toLocalFile();
-            }
-        }
-    }
-    return translatedFileName;
-}
-
+// QString GetTranslatedFileName(const QString & fileName)
+// {
+//     QString translatedFileName = fileName;
+//     if( IsAndroidStorageFileUrl(fileName) )
+//     {
+//         // handle android storage urls --> forward content://... to QFile directly
+//         translatedFileName = fileName;
+//     }
+//     else
+//     {
+//         if(!fileName.startsWith(":"))       // files with : should be resolved in the resources ...
+//         {
+//             QUrl url(fileName);
+//             if(url.isValid() && url.isLocalFile())
+//             {
+//                 translatedFileName = url.toLocalFile();
+//             }
+//         }
+//     }
+//     return translatedFileName;
+// }
 
 bool ApplicationData::simpleReadFileContent(const QString & fileName, QString & content)
 {
-    QFile file(fileName);
+    QString sFileName = fileName;
+
+    QUrl aUrl(fileName);
+    if (aUrl.isLocalFile())
+    {
+        sFileName = aUrl.toLocalFile();
+    }
+
+    QFile file(sFileName);
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
@@ -283,27 +290,28 @@ bool ApplicationData::simpleWriteFileContent(const QString & fileName, const QSt
 
 QString ApplicationData::readFileContent(const QString & fileName) const
 {
-    QString translatedFileName = GetTranslatedFileName(fileName);
+//     QString translatedFileName = fileName; //GetTranslatedFileName(fileName);
 
-    if( IsAndroidStorageFileUrl(translatedFileName) )
-    {
-#ifdef _WITH_STORAGE_ACCESS
-        QByteArray data;
-        bool ok = m_pStorageAccess!=0 ? m_pStorageAccess->readFile(translatedFileName, data) : false;
-        if( ok )
-        {
-            return QString(data);
-        }
-        else
-#endif
-        {
-            return QString(READ_ERROR_OUTPUT);
-        }
-    }
-    else
+//     if( false && IsAndroidStorageFileUrl(translatedFileName) )
+//     {
+// #ifdef _WITH_STORAGE_ACCESS
+//         QByteArray data;
+//         bool ok = m_pStorageAccess!=0 ? m_pStorageAccess->readFile(translatedFileName, data) : false;
+//         if( ok )
+//         {
+//             return QString(data);
+//         }
+//         else
+// #endif
+//         {
+//             return QString(READ_ERROR_OUTPUT);
+//         }
+//     }
+//     else
     {
         QString content;
-        bool ok = simpleReadFileContent(translatedFileName, content);
+        // Android Storage File Urls are now supported by QFile, no StorageAccess handling needed
+        bool ok = simpleReadFileContent(fileName, content);
         if( ok )
         {
             return content;
@@ -317,20 +325,20 @@ QString ApplicationData::readFileContent(const QString & fileName) const
 
 bool ApplicationData::writeFileContent(const QString & fileName, const QString & content)
 {
-    QString translatedFileName = GetTranslatedFileName(fileName);
+//     QString translatedFileName = fileName; //GetTranslatedFileName(fileName);
 
-    if( IsAndroidStorageFileUrl(translatedFileName) )
+//     if( false && IsAndroidStorageFileUrl(translatedFileName) )
+//     {
+// #ifdef _WITH_STORAGE_ACCESS
+//         bool ok = m_pStorageAccess!=0 ? m_pStorageAccess->updateFile(translatedFileName, content.toUtf8()) : false;
+//         return ok;
+// #else
+//         return false;
+// #endif
+//     }
+//     else
     {
-#ifdef _WITH_STORAGE_ACCESS
-        bool ok = m_pStorageAccess!=0 ? m_pStorageAccess->updateFile(translatedFileName, content.toUtf8()) : false;
-        return ok;
-#else
-        return false;
-#endif
-    }
-    else
-    {
-        return simpleWriteFileContent(translatedFileName, content);
+        return simpleWriteFileContent(fileName, content);
     }
 }
 
@@ -552,7 +560,7 @@ bool ApplicationData::shareImage(const QImage & image)
 
 bool ApplicationData::saveDataAsPngImage(const QString & sUrlFileName, const QByteArray & data, int resolutionX, int resolutionY)
 {
-    QString translatedFileName = GetTranslatedFileName(sUrlFileName);
+//    QString translatedFileName = GetTranslatedFileName(sUrlFileName);
 
     QSvgRenderer aRenderer(data);
     QImage aImg(resolutionX, resolutionY, QImage::Format_ARGB32);
@@ -563,27 +571,28 @@ bool ApplicationData::saveDataAsPngImage(const QString & sUrlFileName, const QBy
     QPainter painter(&aImg);
     aRenderer.render(&painter);
 
-    if( IsAndroidStorageFileUrl(translatedFileName) )
-    {
-        QByteArray aArr;
-        QBuffer aBuffer(&aArr);
-        aBuffer.open(QIODevice::WriteOnly);
-        aImg.save(&aBuffer, "PNG");
-#ifdef _WITH_STORAGE_ACCESS
-        return m_pStorageAccess!=0 ? m_pStorageAccess->updateFile(translatedFileName, aArr) : false;
-#else
-        return false;
-#endif
-    }
-    else
+//     if( IsAndroidStorageFileUrl(translatedFileName) )
+//     {
+//         QByteArray aArr;
+//         QBuffer aBuffer(&aArr);
+//         aBuffer.open(QIODevice::WriteOnly);
+//         aImg.save(&aBuffer, "PNG");
+// #ifdef _WITH_STORAGE_ACCESS
+//         return m_pStorageAccess!=0 ? m_pStorageAccess->updateFile(translatedFileName, aArr) : false;
+// #else
+//         return false;
+// #endif
+//     }
+//     else
     {
         // Save, image format based on file extension
-        QString sFileName = translatedFileName;
+        QString sFileName = sUrlFileName;
         // if original file name was no url, than use original file name (used for sharing files)
         //if( sFileName.isEmpty() )
         //{
         //    sFileName = sUrlFileName;
         //}
+// TODO -> check if this also works for Android ???
         return aImg.save(sFileName);
     }
 }

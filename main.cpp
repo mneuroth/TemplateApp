@@ -13,9 +13,14 @@ int main(int argc, char *argv[])
     QGuiApplication::setOrganizationName("mneuroth");
     QGuiApplication::setApplicationName("Contact List");
 
+    //see: https://ekkesapps.wordpress.com/qt-6-qmake/ekkes-checklist/
+
+    //QQuickStyle::setStyle("Material"); // Basic, Fusion, Imagine, macOS, Material, Universal, Windows
+    qputenv("QT_QUICK_CONTROLS_STYLE", "Material");
+
     QQmlApplicationEngine engine;
 
-    ApplicationData data(0, 0, 0, engine);
+    ApplicationData data(0/*, 0*/, 0, engine);
     engine.rootContext()->setContextProperty("applicationData", &data);
 
     engine.loadFromModule("contactlist", "ContactList");

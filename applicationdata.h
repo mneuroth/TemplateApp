@@ -2,7 +2,7 @@
 #define APPLICATIONDATA_H
 
 #undef _WITH_SHARING
-#undef _WITH_STORAGE_ACCESS
+//#undef _WITH_STORAGE_ACCESS
 
 #include <QObject>
 #include <QQmlApplicationEngine>
@@ -12,11 +12,11 @@ class ShareUtils;
 #else
 class ShareUtils {};
 #endif
-#ifdef _WITH_STORAGE_ACCESS
-class StorageAccess;
-#else
-class StorageAccess {};
-#endif
+//#ifdef _WITH_STORAGE_ACCESS
+//class StorageAccess;
+//#else
+//class StorageAccess {};
+//#endif
 
 class QQuickTextDocument;
 
@@ -109,7 +109,7 @@ class ApplicationData : public QObject
     Q_PROPERTY(bool isAdmin READ isAdmin WRITE setAdmin NOTIFY isAdminChanged)
 
 public:
-    explicit ApplicationData(QObject *parent, ShareUtils * pShareUtils, StorageAccess * pStorageAccess, QQmlApplicationEngine & aEngine);
+    explicit ApplicationData(QObject *parent, ShareUtils * pShareUtils/*, StorageAccess * pStorageAccess*/, QQmlApplicationEngine & aEngine);
     ~ApplicationData();
 
     Q_INVOKABLE QString getAppInfos() const;
@@ -203,7 +203,7 @@ private:
 #if defined(Q_OS_ANDROID)
     QStringList                 m_aSharedFilesList;
 #endif
-    StorageAccess *             m_pStorageAccess;   // not an owner !
+    //StorageAccess *             m_pStorageAccess;   // not an owner !
     ShareUtils *                m_pShareUtils;      // not an owner !
 
     QQmlApplicationEngine &     m_aEngine;          // not an owner !
