@@ -44,9 +44,11 @@ jobs:
       run: |
         mkdir build
         ls -lrt
+        ls -lrt ./build
         cmake -S . -B ./build
         ls -lrt
         cd ./build
         ls -lrt
+        cat Makefile
         make
         ls -lrt
