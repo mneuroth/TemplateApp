@@ -20,7 +20,7 @@ if(ANDROID)
 endif()
 
 qt_add_qml_module(templateappexample
-    URI templateappexample
+    URI templateapp
     QML_FILES
         "TemplateApp.qml"
         "AboutDialog.qml"
