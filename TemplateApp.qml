@@ -578,7 +578,7 @@ ApplicationWindow {
         property int supportLevel: -1   // no support level at all
 
         property bool useToolBar: true
-        property bool mobileUI: applicationData.isMobileUI
+        property bool mobileUI: applicationData !== null ? applicationData.isMobileUI : mobileUI
     }
 
     Connections {

@@ -195,12 +195,13 @@ MobileFileDialogForm {
         id: fileDelegate
 
         Rectangle {
+            id: rectangle
             property string currentFileName: fileName
             property bool isFile: !fileIsDir
             height: 40
             color: "transparent"
-            anchors.left: parent.left
-            anchors.right: parent.right
+            anchors.left:  parent !== null ? parent.left : listView
+            anchors.right: parent !== null ? parent.right : listView
             Keys.onPressed: {
                  if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
                     if( fileIsDir )
@@ -267,12 +268,15 @@ MobileFileDialogForm {
                 }
             }
             MouseArea {
-                anchors.fill: parent;
+                anchors.fill: parent
                 onClicked: {
                     root.listView.currentIndex = index
                     if( fileIsDir )
                     {
                         root.setDirectory(filePath)
+                    }
+                    else
+                    {
                         root.setCurrentName(fileName)
                     }
                 }

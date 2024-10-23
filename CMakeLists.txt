@@ -32,7 +32,6 @@ qt_add_qml_module(templateappexe
         "Page2Form.ui.qml"
         "MobileFileDialog.qml"
         "MobileFileDialogForm.ui.qml"
-        "designer/Backend/ContactModel.qml"
     RESOURCES
         "pico_qt_logo.png"
         "images/menu_bars.svg"
