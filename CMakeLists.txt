@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 cmake_minimum_required(VERSION 3.16)
-project(contactlist LANGUAGES CXX)
+project(templateapp LANGUAGES CXX)
 
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui Quick Svg Sensors)
@@ -10,7 +10,6 @@ find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui Quick Svg Sensors)
 qt_standard_project_setup(REQUIRES 6.6)
 
 qt_add_executable(templateapp WIN32 MACOSX_BUNDLE
-    contactmodel.cpp contactmodel.h
     applicationdata.cpp applicationdata.h
     main.cpp
 )
@@ -21,14 +20,9 @@ if(ANDROID)
 endif()
 
 qt_add_qml_module(templateapp
-    URI contactlist
+    URI templateapp
     QML_FILES
-        "ContactDelegate.ui.qml"
-        "ContactDialog.qml"
-        "ContactForm.ui.qml"
-        "ContactView.ui.qml"
-        "SectionDelegate.ui.qml"
-        "ContactList.qml"
+        "TemplateApp.qml"
         "AboutDialog.qml"
         "AboutDialogForm.ui.qml"
         "SettingsDialog.qml"

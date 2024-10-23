@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     ApplicationData data(0/*, 0*/, 0, engine);
     engine.rootContext()->setContextProperty("applicationData", &data);
 
-    engine.loadFromModule("contactlist", "ContactList");
+    engine.loadFromModule("templateapp", "TemplateApp");
     if (engine.rootObjects().isEmpty())
         return -1;
 
