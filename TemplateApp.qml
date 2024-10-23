@@ -44,6 +44,11 @@ ApplicationWindow {
         homePage.txtEditor.forceActiveFocus()
     }
 
+    function clearDocument() {
+        setFileName("empty.txt", null)
+        homePage.txtEditor.text = "<empty>"
+    }
+
     function processOpenFileCallback(fileName) {
         var content = applicationData.readFileContent(fileName)
         setFileName(fileName, null)
@@ -152,49 +157,7 @@ ApplicationWindow {
     function showThankYouDialog(supportLevel) {
         showInfoDialog(qsTr("Thank you for supporting the development of this application !"), qsTr("Thank you !"))
     }
-/*
-    ContactDialog {
-        id: contactDialog
-        onFinished: function(fullName, address, city, number) {
-            if (window.currentContact === -1)
-                contactView.model.append(fullName, address, city, number)
-            else
-                contactView.model.set(window.currentContact, fullName, address, city, number)
-        }
-    }
 
-    Menu {
-        id: contactMenu
-        x: parent.width / 2 - width / 2
-        y: parent.height / 2 - height / 2
-        modal: true
-
-        Label {
-            padding: 10
-            font.bold: true
-            width: parent.width
-            horizontalAlignment: Qt.AlignHCenter
-            text: window.currentContact >= 0 ? contactView.model.get(window.currentContact).fullName : ""
-        }
-        MenuItem {
-            text: qsTr("Edit...")
-            onTriggered: contactDialog.editContact(contactView.model.get(window.currentContact))
-        }
-        MenuItem {
-            text: qsTr("Remove")
-            onTriggered: contactView.model.remove(window.currentContact)
-        }
-    }
-
-    ContactView {
-        id: contactView
-        anchors.fill: parent
-        onPressAndHold: function(index) {
-            window.currentContact = index
-            contactMenu.open()
-        }
-    }
-*/
     header: ToolBar {
         contentHeight: toolButton.implicitHeight
 
@@ -233,6 +196,14 @@ ApplicationWindow {
                 //xxxenabled: !isDialogOpen()
                 y: menuButton.height
 
+                MenuItem {
+                    text: qsTr("New")
+                    //icon.source: "images/new104.svg"
+                    //xxxenabled: !isDialogOpen()
+                    onTriggered: {
+                        clearDocument()
+                    }
+                }
                 MenuItem {
                     text: qsTr("Open")
                     //icon.source: "images/open.svg"
@@ -632,6 +603,7 @@ ApplicationWindow {
             //console.log("storage open")
             //addToOutput("storage open")
             //old: storageAccess.openFile()
+            stackView.pop()
             fileDialog.openMode = true
             fileDialog.folder = "."
             fileDialog.nameFilters = ["*"]
@@ -641,6 +613,7 @@ ApplicationWindow {
         function onStorageCreateFile(fileNane) {
             //console.log("storage create file "+fileNane)
             //addToOutput("storage create file "+fileNane)
+            stackView.pop()
             setFileName(fileName, null)
             //old: storageAccess.createFile(fileNane)
             fileDialog.openMode = false
@@ -705,8 +678,7 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         onClicked: {
-            window.currentContact = -1
-            contactDialog.createContact()
+            console.log("CLICKED !")
         }
     }
 */
