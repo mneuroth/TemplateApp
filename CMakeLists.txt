@@ -2,25 +2,25 @@
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 cmake_minimum_required(VERSION 3.16)
-project(qt6templateapp LANGUAGES CXX)
+project(templateapp LANGUAGES CXX)
 
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui Quick Svg Sensors)
 
 qt_standard_project_setup(REQUIRES 6.6)
 
-qt_add_executable(templateapp WIN32 MACOSX_BUNDLE
+qt_add_executable(templateappexample WIN32 MACOSX_BUNDLE
     applicationdata.cpp applicationdata.h
     main.cpp
 )
 
 if(ANDROID)
-    set_property(TARGET templateapp PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+    set_property(TARGET templateappexample PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
         ${CMAKE_CURRENT_SOURCE_DIR}/android)
 endif()
 
-qt_add_qml_module(templateapp
-    URI templateapp
+qt_add_qml_module(templateappexample
+    URI templateappexample
     QML_FILES
         "TemplateApp.qml"
         "AboutDialog.qml"
@@ -55,7 +55,7 @@ qt_add_qml_module(templateapp
         "images/text_snippet-black-24dp.svg"
 )
 
-target_link_libraries(templateapp PUBLIC
+target_link_libraries(templateappexample PUBLIC
     Qt6::Core
     Qt6::Gui
     Qt6::Widgets
@@ -64,14 +64,14 @@ target_link_libraries(templateapp PUBLIC
     Qt6::Sensors
 )
 
-install(TARGETS templateapp
+install(TARGETS templateappexample
     BUNDLE  DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
 qt_generate_deploy_qml_app_script(
-    TARGET templateapp
+    TARGET templateappexample
     OUTPUT_SCRIPT deploy_script
     MACOS_BUNDLE_POST_BUILD
     NO_UNSUPPORTED_PLATFORM_ERROR
