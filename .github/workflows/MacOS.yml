@@ -44,6 +44,7 @@ jobs:
       run: |
         mkdir build
         ls -lrt
+        ls -lrt ./build
         cmake -S . -B ./build
         ls -lrt
         cd ./build
@@ -52,6 +53,6 @@ jobs:
         ls -lrt
 
         which macdeployqt
-        macdeployqt templateapp.app -dmg -qmldir=. -verbose=2
+        macdeployqt templateappexe.app -dmg -qmldir=. -verbose=2
         ls -lrt        
 
